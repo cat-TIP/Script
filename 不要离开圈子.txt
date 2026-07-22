@@ -1,0 +1,184 @@
+local Players = game.Players
+local LocalPlayer = Players.LocalPlayer
+
+local WindUI = loadstring(game:HttpGet("https://github.com/article-hub-studio/WindUI-Skibidi/releases/latest/download/main.lua"))()
+
+local Window = WindUI:CreateWindow({ --主题配置
+    User = {
+        Enabled = true,
+        Callback = function()
+            print("clicked")
+        end,
+        Anonymous = false,
+    },
+    Author = "By Cat",
+    IconThemed = false,
+    ScrollBarEnabled = true,
+    Folder = "Cat",
+    HideSearchBar = false,
+    Title = "猫屋︱不要离开圈子",
+    Transparent = true,
+    SideBarWidth = 200,
+    Theme = "Dark",
+    Acrylic = false,
+    Icon = "Cat",
+    --Background = "rbxassetid://88271032881974",
+    Size = UDim2.fromOffset(700,700),
+})
+
+Window:EditOpenButton({
+    Title = "猫屋︱不要离开圈子",
+    Color = ColorSequence.new(Color3.fromHex("#FFFFFF"), Color3.fromHex("#FFFFFF")),
+    Draggable = true,
+    StrokeThickness = 1,
+    CornerRadius = UDim.new(0.4, 0),
+    OnlyMobile = false,
+})
+
+local Tab = Window:Tab({
+    Title = "生存",
+    Icon = "", -- optional
+})
+
+local Input = Tab:Input({
+    Title = "拾取间隔",
+    Value = 0.1,
+    Desc = "这只是个间隔",
+    Callback = function(value)
+  a3 = tonumber(value)
+    end
+})
+
+local Toggle = Tab:Toggle({
+    Title = "自动食物",
+    Desc = "自动上秋天上掉下来的食物",
+    Callback = function(value)
+  a1 = value
+task.spawn(function()
+ while a1 do
+for _, Part in pairs(workspace:GetChildren()) do
+ if Part:IsA("Tool") and Part:FindFirstChild("Handle") then
+firetouchinterest(LocalPlayer.Character.HumanoidRootPart, Part.Handle, 0)
+ end
+end
+ task.wait(a3)
+ end
+end)
+    end
+})
+
+local Toggle = Tab:Toggle({
+    Title = "自动金币",
+    Desc = "自动拾取刚刷新的金币",
+    Callback = function(value)
+  a2 = value
+task.spawn(function()
+ while a2  do
+for _, Part in pairs(workspace.Coins:GetChildren()) do
+ if Part:IsA("Part") then
+firetouchinterest(LocalPlayer.Character.HumanoidRootPart, Part, 0)
+ end
+end
+ task.wait(a3)
+ end
+end)
+    end
+})
+
+local Toggle = Tab:Toggle({
+    Title = "快速互动",
+    Callback = function(value)
+  a9 = value
+for _,Part in game:GetDescendants() do
+    if Part:IsA("ProximityPrompt") then
+Part.HoldDuration = 0
+    end    
+end
+    end
+})
+
+local Tab = Window:Tab({
+    Title = "pvp功能",
+    Icon = "bird", -- optional
+})
+
+local Input = Tab:Input({
+    Title = "人物自身碰撞箱大小",
+    Value = 10,
+    Callback = function(value)
+    a4 = tonumber(value)
+    end
+})
+
+local Input = Tab:Input({
+    Title = "透明度",
+    Value = 0.5,
+    Callback = function(value)
+    a6 = tonumber(value)
+    end
+})
+
+local Toggle = Tab:Toggle({
+    Title = "碰撞",
+    Callback = function(value)
+     a7 = value
+    end
+})
+
+local Toggle = Tab:Toggle({
+    Title = "开关",
+    Callback = function(value)
+    a5 = value
+ if a5 then
+task.spawn(function()
+ while a5 do
+for _, player in ipairs(Players:GetPlayers()) do
+ if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+player.Character:FindFirstChild("HumanoidRootPart").Size = Vector3.new(a4,a4,a4)
+player.Character:FindFirstChild("HumanoidRootPart").Transparency = a6
+player.Character:FindFirstChild("HumanoidRootPart").CanCollide = a7
+ end
+end 
+ task.wait(0.1)
+ end
+end)
+ else
+for _, player in ipairs(Players:GetPlayers()) do
+ if player ~= Players.LocalPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+player.Character:FindFirstChild("HumanoidRootPart").Size = Vector3.new(2,2,1)
+player.Character:FindFirstChild("HumanoidRootPart").Transparency = 1
+player.Character:FindFirstChild("HumanoidRootPart").CanCollide = false
+ end
+end 
+end
+    end
+})
+
+local Toggle = Tab:Toggle({
+    Title = "自动攻击",
+    Callback = function(value)
+       a8 = value
+  task.spawn(function()
+ while a8 do
+local Event = game:GetService("Players").LocalPlayer.Character.Punch.RemoteEvent
+Event:FireServer()
+ task.wait(0)
+ end
+end)
+    end
+})
+
+workspace.DescendantAdded:Connect(function(Part)
+ if a9 then
+  if Part:IsA("ProximityPrompt") then
+Part.HoldDuration = 0
+ end
+ end
+end)
+
+WindUI:Notify({
+    Title = "提示！",
+    Content = "初始化成功",
+    Style = "Success",
+    Duration = 3
+})
